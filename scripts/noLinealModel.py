@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import rospy
 import numpy as np
+from geometry_msgs.msg import Polygon, Point32
 from sensor_msgs.msg import JointState
 
 # Constants
@@ -15,12 +16,17 @@ class DoublePendulum_NoLineal:
         self.__l2 = l2
 
         # Setup Variables to be used
-        self.__states = {"theta1": np.pi/16, "theta2": 0.0, "theta_dot1": 0.0, "theta_dot2": 0.0}
+        self.__states = {"theta1": 0.0, "theta2": np.pi/4, "theta_dot1": 0.0, "theta_dot2": 0.0}
         self._last_time = 0.0
 
         # Declare the joints message
         self.__joints = JointState()
         self.__joints.name = ['joint1', 'joint2']
+
+        # Declare the points messages
+        self.__position = Polygon()
+        self.__mass1 = Point32()
+        self.__mass2 = Point32()
 
     # Wrap to pi function
     def __wrap_to_Pi(self, theta):
@@ -42,49 +48,64 @@ class DoublePendulum_NoLineal:
         self.__states["theta2"] = self.__wrap_to_Pi(self.__states["theta2"] + self.__states["theta_dot2"]*self.__dt)
         delta = self.__states["theta2"] - self.__states["theta1"]
 
+        # Equations of motion
+        theta_double_dot1 = ((self.__m2*self.__l1*self.__states["theta_dot1"]**2*np.sin(delta)*np.cos(delta) + 
+                    self.__m2*G*np.sin(self.__states["theta2"])*np.cos(delta) + 
+                    self.__m2*self.__l2*self.__states["theta_dot2"]**2*np.sin(delta) - 
+                    (self.__m1+self.__m2)*G*np.sin(self.__states["theta1"])) / 
+                    ((self.__m1+self.__m2)*self.__l1 - self.__m2*self.__l1*np.cos(delta)**2))
+
+        theta_double_dot2 = ((-self.__m2*self.__l2*self.__states["theta_dot2"]**2*np.sin(delta)*np.cos(delta) + 
+                    (self.__m1+self.__m2)*(G*np.sin(self.__states["theta1"])*np.cos(delta) 
+                    - self.__l1*self.__states["theta_dot1"]**2*np.sin(delta) - 
+                    G*np.sin(self.__states["theta2"]))) / 
+                    ((self.__m1+self.__m2)*self.__l2 - self.__m2*self.__l2*np.cos(delta)**2))
+
         # Non linear model with first grade equations
         model = {
-            "x_dot1" : self.__states["theta_dot1"], # Equal to omega1
-                 
-            "omega_dot1" : ((self.__m2*self.__l1*self.__states["theta_dot1"]**2*np.sin(delta)*np.cos(delta) + 
-                            self.__m2*G*np.sin(self.__states["theta2"])*np.cos(delta) + 
-                            self.__m2*self.__l2*self.__states["theta_dot2"]**2*np.sin(delta) - 
-                            (self.__m1+self.__m2)*G*np.sin(self.__states["theta1"])) / 
-                            ((self.__m1+self.__m2)*self.__l1 - self.__m2*self.__l1*np.cos(delta)**2)), 
-
-            "x_dot2" : self.__states["theta_dot2"], # Equal to omega2
-
-            "omega_dot2" : ((-self.__m2*self.__l2*self.__states["theta_dot2"]**2*np.sin(delta)*np.cos(delta) + 
-                            (self.__m1+self.__m2)*(G*np.sin(self.__states["theta1"])*np.cos(delta) 
-                            - self.__l1*self.__states["theta_dot1"]**2*np.sin(delta) - 
-                            G*np.sin(self.__states["theta2"]))) / 
-                            ((self.__m1+self.__m2)*self.__l2 - self.__m2*self.__l2*np.cos(delta)**2))
+            "omega1" : self.__states["theta_dot1"],
+            "omega_dot1" : theta_double_dot1,
+            "omega2" : self.__states["theta_dot2"],
+            "omega_dot2" : theta_double_dot2
         }
-        
+
         self.__states["theta_dot1"] += model["omega_dot1"]*self.__dt # Integrate the acceleration for joint1
         self.__states["theta_dot2"] += model["omega_dot2"]*self.__dt # Integrate the acceleration for joint2
-
-    # Set the joints message
-    def setJoints(self):
+    
+    # Get the joints message
+    def getJoints(self):
         self.__joints.header.stamp = rospy.Time.now()
         self.__joints.position = [self.__states["theta1"], self.__states["theta2"]] # Set the angles
-        self.__joints.velocity = [self.__states["theta_dot1"], self.__states["theta_dot2"]] # Set the velocities
         return self.__joints
+
+    # Get the points for the pendulum
+    def getPoints(self):
+        # Set the points for the first mass
+        self.__mass1.x = self.__l1 * np.sin(self.__states["theta1"])
+        self.__mass1.y = - self.__l1 * np.cos(self.__states["theta1"])
+
+        # Set the points for the second mass
+        self.__mass2.x = self.__mass1.x + self.__l2*np.sin(self.__states["theta2"])
+        self.__mass2.y = self.__mass1.y - self.__l2*np.cos(self.__states["theta2"])
+
+        self.__position.points = [self.__mass1, self.__mass2]
+        return self.__position
 
 if __name__=='__main__':
     # Initialise and Setup node
-    rospy.init_node("No_Lineal_Model_Rover")
+    rospy.init_node("No_Lineal_Model_Pendulum")
 
     # Configure the Node
     rate = rospy.Rate(rospy.get_param("~node_rate", 1000))
 
     # Setup de publishers
-    pub = rospy.Publisher("/noLineal_joints", JointState, queue_size = 10)
+    joints_pub = rospy.Publisher("/noLineal_joints", JointState, queue_size = 10)
+    points_pub = rospy.Publisher("/noLineal_points", Polygon, queue_size = 10)
 
     # Classes
     pendulum = DoublePendulum_NoLineal(l1=0.36, m1=0.75, l2=0.36, m2=0.75)
 
-    print("The No Lineal Model is Running")
+    print("The Non Lineal model pendulum is Running")
     try:
         while not rospy.is_shutdown():
             if not pendulum._last_time:
@@ -94,7 +115,8 @@ if __name__=='__main__':
                 pendulum.solveEquations()
 
                 # Publish the joint states
-                pub.publish(pendulum.setJoints())
+                joints_pub.publish(pendulum.getJoints())
+                points_pub.publish(pendulum.getPoints())
             # Wait and repeat
             rate.sleep()
 

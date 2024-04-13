@@ -81,9 +81,7 @@
                     <plot_rate>30</plot_rate>
                     <title>Lineal Model</title>
                 </column_0>
-            </row_0>
-            <row_1>
-                <column_0>
+                <column_1>
                     <axes>
                         <axes>
                             <x_axis>
@@ -156,8 +154,8 @@
                     </legend>
                     <plot_rate>30</plot_rate>
                     <title>No lineal model</title>
-                </column_0>
-            </row_1>
+                </column_1>
+            </row_0>
         </plots>
         <track_points>false</track_points>
     </table>

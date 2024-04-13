@@ -6,6 +6,8 @@
     <node name="joint_state_lineal" pkg="double_pendulum" type="linealModel.py"> </node>
 
     <!-- Multiplot -->
-    <arg name="plotconfig" default="$(find double_pendulum)/multiplot/pendulumPlots.xml" />
-    <node name="pos_vel_phase_plot" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg plotconfig)" />
+    <arg name="phase_config" default="$(find double_pendulum)/multiplot/phasePlots.xml" />
+    <node name="angles_phase_plot" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg phase_config)" />
+    <arg name="simulation_config" default="$(find double_pendulum)/multiplot/pendulumSimulation.xml" />
+    <node name="pendulum_simulation" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg simulation_config)" />
 </launch>
