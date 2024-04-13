@@ -73,7 +73,7 @@ class DoublePendulum_NoLineal:
 
 if __name__=='__main__':
     # Initialise and Setup node
-    rospy.init_node("SLM_Sim")
+    rospy.init_node("No_Lineal_Model_Rover")
 
     # Configure the Node
     rate = rospy.Rate(rospy.get_param("~node_rate", 1000))
