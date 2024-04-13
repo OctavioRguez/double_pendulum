@@ -2,10 +2,10 @@
 <launch>
 
     <!--Joint State Publisher --> <!--Uncomment for TESTING ONLY (COMMENT YOUR JOINT STATE PUBLISHER)-->
-    <node name="joint_state_no_lineal" pkg="slm_sim" type="noLinealModel.py"> </node>
-    <node name="joint_state_lineal" pkg="slm_sim" type="linealModel.py"> </node>
+    <node name="joint_state_no_lineal" pkg="double_pendulum" type="noLinealModel.py"> </node>
+    <node name="joint_state_lineal" pkg="double_pendulum" type="linealModel.py"> </node>
 
     <!-- Multiplot -->
-    <arg name="plotconfig" default="$(find slm_sim)/multiplot/pendulumPlots.xml" />
+    <arg name="plotconfig" default="$(find double_pendulum)/multiplot/pendulumPlots.xml" />
     <node name="pos_vel_phase_plot" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg plotconfig)" />
 </launch>
