@@ -84,7 +84,7 @@ if __name__=='__main__':
     # Classes
     pendulum = DoublePendulum_NoLineal(l1=0.36, m1=0.75, l2=0.36, m2=0.75)
 
-    print("The SLM sim is Running")
+    print("The No Lineal Model is Running")
     try:
         while not rospy.is_shutdown():
             if not pendulum._last_time:
