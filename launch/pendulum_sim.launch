@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- Load Paramters file -->
+    <rosparam command="load" file="$(find double_pendulum)/config/pendulum.yaml" />
 
-    <!--Joint State Publisher --> <!--Uncomment for TESTING ONLY (COMMENT YOUR JOINT STATE PUBLISHER)-->
-    <node name="joint_state_no_lineal" pkg="double_pendulum" type="noLinealModel.py"> </node>
-    <node name="joint_state_lineal" pkg="double_pendulum" type="linealModel.py"> </node>
+    <!--Joint State Publisher -->
+    <node name="pendulum_sim" pkg="double_pendulum" type="simulation.py" output="screen"> </node>
+    <node name="pendulum_control" pkg="double_pendulum" type="control.py" output="screen"> </node>
 
-    <!-- Multiplot -->
-    <arg name="phase_config" default="$(find double_pendulum)/multiplot/phasePlots.xml" />
-    <node name="angles_phase_plot" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg phase_config)" />
-    <arg name="simulation_config" default="$(find double_pendulum)/multiplot/pendulumSimulation.xml" />
-    <node name="pendulum_simulation" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg simulation_config)" />
+    <!-- Simulation Multiplot -->
+    <arg name="movement_config" default="$(find double_pendulum)/multiplot/pendulum_movement.xml" />
+    <node name="movement_simulation" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg movement_config)" />
+    <!-- Phase Multiplot -->
+    <arg name="phase_config" default="$(find double_pendulum)/multiplot/phase_plots.xml" />
+    <node name="phase_plots" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg phase_config)"/>
 </launch>

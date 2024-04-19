@@ -11,12 +11,12 @@
                     <axes>
                         <axes>
                             <x_axis>
-                                <custom_title>Joint1</custom_title>
+                                <custom_title>X position</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </x_axis>
                             <y_axis>
-                                <custom_title>Joint2</custom_title>
+                                <custom_title>Y position</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </y_axis>
@@ -26,7 +26,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field>position/0</field>
+                                    <field>x</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -35,21 +35,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/lineal_joints</topic>
-                                    <type>sensor_msgs/JointState</type>
+                                    <topic>/sim_position</topic>
+                                    <type>geometry_msgs/Point32</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>position/1</field>
+                                    <field>y</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
                                         <absolute_minimum>0</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
+                                        <relative_minimum>1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/lineal_joints</topic>
-                                    <type>sensor_msgs/JointState</type>
+                                    <topic>/sim_position</topic>
+                                    <type>geometry_msgs/Point32</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -69,28 +69,28 @@
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
                                 <sticks_orientation>2</sticks_orientation>
-                                <type>0</type>
+                                <type>3</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Joint1 vs Joint2</title>
+                            <title>Trajectory</title>
                         </curve_0>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Lineal Model</title>
+                    <title>Normal Pendulum</title>
                 </column_0>
                 <column_1>
                     <axes>
                         <axes>
                             <x_axis>
-                                <custom_title>Joint1</custom_title>
+                                <custom_title>X position</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </x_axis>
                             <y_axis>
-                                <custom_title>Joint2</custom_title>
+                                <custom_title>Y position</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </y_axis>
@@ -100,7 +100,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field>position/0</field>
+                                    <field>x</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -109,11 +109,11 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/noLineal_joints</topic>
-                                    <type>sensor_msgs/JointState</type>
+                                    <topic>/control_position</topic>
+                                    <type>geometry_msgs/Point32</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>position/1</field>
+                                    <field>y</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -122,8 +122,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/noLineal_joints</topic>
-                                    <type>sensor_msgs/JointState</type>
+                                    <topic>/control_position</topic>
+                                    <type>geometry_msgs/Point32</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -146,14 +146,14 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Joint1 vs Joint2</title>
+                            <title>Trajectory</title>
                         </curve_0>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>No lineal model</title>
+                    <title>Controlled Pendulum</title>
                 </column_1>
             </row_0>
         </plots>
