@@ -28,9 +28,9 @@ class Simple_Pendulum:
         ])
         self._B = np.array([
             [0],
-            [1/self._l]
+            [1]
         ])
-        self._k = np.array([[G - 2*self._l, -3 * self._l]])
+        self._k = np.array([[G/self._l - 2, -3]])
 
         # Declare the joints message
         self._joints = JointState()
