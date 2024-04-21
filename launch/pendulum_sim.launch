@@ -7,10 +7,7 @@
     <node name="pendulum_sim" pkg="double_pendulum" type="simulation.py" output="screen"> </node>
     <node name="pendulum_control" pkg="double_pendulum" type="control.py" output="screen"> </node>
 
-    <!-- Simulation Multiplot -->
-    <arg name="movement_config" default="$(find double_pendulum)/multiplot/pendulum_movement.xml" />
-    <node name="movement_simulation" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg movement_config)" />
-    <!-- Phase Multiplot -->
-    <arg name="phase_config" default="$(find double_pendulum)/multiplot/phase_plots.xml" />
-    <node name="phase_plots" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(arg phase_config)"/>
+        <!-- Plots -->
+        <arg name="plots_config" default="$(find double_pendulum)/plotJuggler/plots.xml"/>
+        <node pkg="plotjuggler" type="plotjuggler" name="plotjuggler" args="-l $(arg plots_config)"/>
 </launch>
