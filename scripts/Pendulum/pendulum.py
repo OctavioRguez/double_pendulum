@@ -21,6 +21,10 @@ class Simple_Pendulum:
                         "x2": rospy.get_param("/pendulum/omega", default = 0.0)}
         self._last_time = 0.0
 
+        # Noise parameters
+        self._mean = 0.0
+        self._std = 1.8
+
         # Model matrix
         self._A = np.array([
             [0, 1], # x_dot1

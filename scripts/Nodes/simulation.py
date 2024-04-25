@@ -32,7 +32,7 @@ class Simulation(Simple_Pendulum):
             [self._states["x1"]], 
             [self._states["x2"]]
         ])
-        x_dot = np.dot(self._A, x)
+        x_dot = np.dot(self._A, x) + np.random.normal(self._mean, self._std)
         self._states["x2"] += x_dot[1][0]*dt # Integrate the acceleration
 
         # Publish Joints
